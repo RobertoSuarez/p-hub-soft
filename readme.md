@@ -1,4 +1,4 @@
-# P-HUH
+# P-HUB
 
 ## Clonar el repositorio
 
