@@ -55,7 +55,6 @@ class PorHub {
 
   phub(hubs, quantityServers, capacityServers, iterations) {
     console.log(`Iteraciones que se quiere hacer ${iterations}`);
-    const loadingInterval = this.animateLoading(); // iniciamos la animación
 
     let bestSolution = this.pHubOneSolution(
       _.cloneDeep(hubs),
@@ -74,8 +73,6 @@ class PorHub {
         bestSolution = solution;
       }
     }
-
-    clearInterval(loadingInterval);
 
     return bestSolution;
   }
