@@ -3,14 +3,25 @@ const fs = require("fs");
 const spinners = require("cli-spinners");
 const _ = require("lodash");
 const { Hub } = require("./Hub");
+const Grafico = require("./grafico");
 
 class PorHub {
   constructor(filePath) {
     this.filePath = filePath;
     this.hubs = [];
-    this.totalHubs = 0;
+    this.totalHubs = 0; 
     this.quantityServers = 0;
     this.capacityServers = 0;
+    this.serv = null;
+  }
+
+  encapsuleServ() { 
+    let serv = 0; 
+      serv= this.serv;   
+    // Devuelve los servidores en un objeto
+    return { 
+      servidores: serv, 
+    };
   }
 
   run(iterations) {
@@ -36,22 +47,29 @@ class PorHub {
       }
     });
 
-    this.rl.on("close", () => {
-      //   console.log(`Total de hubs: ${this.totalHubs}`);
-      //   console.log(`Cantidad de servidores: ${this.quantityServers}`);
-      //   console.log(`Capacidad de servidores: ${this.capacityServers}`);
-      //   console.log(this.hubs);
-
-      const { solution, servers } = this.phub(
+    this.rl.on("close", () => { 
+ 
+      const { solution } = this.phub(
         this.hubs,
         this.quantityServers,
         this.capacityServers,
         iterations
-      );
-      console.log(servers);
-      console.log(`La mejor solución es: ${solution}`);
+      ); 
+           // Llama al método para calcular los datos de clientes y servidores
+    this.encapsuleServ = this.encapsuleServ();
+  
+      console.log(`Cantidad de hubs: ${this.totalHubs}`);
+      console.log(`Cantidad de clientes: ${this.totalClients}`);
+      console.log(`Cantidad de servidores: ${this.quantityServers}`);
+      console.log(`Capacidad total de servidores: ${ this.capacityServers}`); 
+      console.log(`La mejor solución es: ${solution}`); 
+ 
+      // Show plot
+    var plots = new Grafico.Plots(); 
+    plots.showPlot(this.encapsuleServ,solution); 
     });
   }
+ 
 
   phub(hubs, quantityServers, capacityServers, iterations) {
     console.log(`Iteraciones que se quiere hacer ${iterations}`);
@@ -62,16 +80,16 @@ class PorHub {
       capacityServers
     );
 
-    for (let index = 0; index < iterations - 1; index++) {
-      const solution = this.pHubOneSolution(
-        _.cloneDeep(hubs),
-        quantityServers,
-        capacityServers
-      );
+    for (let index = 0; index < iterations - 1; index++) { 
+        const solution = this.pHubOneSolution(
+          _.cloneDeep(hubs),
+          quantityServers,
+          capacityServers
+        ); 
 
       if (solution.solution < bestSolution.solution) {
         bestSolution = solution;
-      }
+      }  
     }
 
     return bestSolution;
@@ -102,9 +120,11 @@ class PorHub {
       .map((server) => server.totalDistance)
       .reduce((prev, current) => prev + current, 0);
 
+      this.serv=servers;
+
     return {
       solution,
-      servers,
+      servers,  
     };
   }
 
@@ -154,5 +174,5 @@ class PorHub {
   }
 }
 
-const pHub = new PorHub("src/data/phub_10_2_3.txt");
-pHub.run(10000);
+const pHub = new PorHub("src/data/phub_50_5_2.txt");
+pHub.run(1000); 
