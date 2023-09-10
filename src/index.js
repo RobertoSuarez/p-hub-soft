@@ -48,7 +48,7 @@ class PorHub {
         this.capacityServers,
         iterations
       );
-      //   console.log(servers);
+      console.log(servers);
       console.log(`La mejor solución es: ${solution}`);
     });
   }
@@ -97,6 +97,7 @@ class PorHub {
         hubs.splice(rndIndexClient, 1);
       }
     }
+
     const solution = servers
       .map((server) => server.totalDistance)
       .reduce((prev, current) => prev + current, 0);
@@ -153,5 +154,5 @@ class PorHub {
   }
 }
 
-const pHub = new PorHub("src/data/phub_50_5_1.txt");
-pHub.run(1000);
+const pHub = new PorHub("src/data/phub_10_2_3.txt");
+pHub.run(10000);
