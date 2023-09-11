@@ -14,15 +14,7 @@ class PorHub {
     this.capacityServers = 0;
     this.serv = null;
   }
-
-  encapsuleServ() { 
-    let serv = 0; 
-      serv= this.serv;   
-    // Devuelve los servidores en un objeto
-    return { 
-      servidores: serv, 
-    };
-  }
+ 
 
   run(iterations) {
     this.rl = readline.createInterface({
@@ -54,9 +46,7 @@ class PorHub {
         this.quantityServers,
         this.capacityServers,
         iterations
-      ); 
-           // Llama al método para calcular los datos de clientes y servidores
-    this.encapsuleServ = this.encapsuleServ();
+      );  
   
       console.log(`Cantidad de hubs: ${this.totalHubs}`); 
       console.log(`Cantidad de servidores: ${this.quantityServers}`);
@@ -65,7 +55,8 @@ class PorHub {
  
       // Show plot
     var plots = new Grafico.Plots(); 
-    plots.showPlot(this.encapsuleServ,solution); 
+    //Enviamos los servidores y nuestra solucion
+    plots.showPlot(this.serv,solution); 
     });
   }
  

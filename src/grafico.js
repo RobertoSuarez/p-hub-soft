@@ -1,7 +1,7 @@
 var nodeplotlib = require("nodeplotlib");
 
 class Plots {
-    showPlot({ servidores }, solution) {
+    showPlot( servidores , solution) {
         const plots = [];
         const getClients = [];
         const colors = [
