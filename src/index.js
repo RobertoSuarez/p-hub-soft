@@ -79,6 +79,7 @@ class PorHub {
 
       if (solution.solution < bestSolution.solution) {
         bestSolution = solution;
+        this.serv = solution.servers;
       }  
     }
 
@@ -109,8 +110,7 @@ class PorHub {
     const solution = servers
       .map((server) => server.totalDistance)
       .reduce((prev, current) => prev + current, 0);
-
-      this.serv=servers;
+ 
 
     return {
       solution,
@@ -165,4 +165,4 @@ class PorHub {
 }
 
 const pHub = new PorHub("src/data/phub_50_5_2.txt");
-pHub.run(1000); 
+pHub.run(10); 
