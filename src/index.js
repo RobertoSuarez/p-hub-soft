@@ -58,8 +58,7 @@ class PorHub {
            // Llama al método para calcular los datos de clientes y servidores
     this.encapsuleServ = this.encapsuleServ();
   
-      console.log(`Cantidad de hubs: ${this.totalHubs}`);
-      console.log(`Cantidad de clientes: ${this.totalClients}`);
+      console.log(`Cantidad de hubs: ${this.totalHubs}`); 
       console.log(`Cantidad de servidores: ${this.quantityServers}`);
       console.log(`Capacidad total de servidores: ${ this.capacityServers}`); 
       console.log(`La mejor solución es: ${solution}`); 
