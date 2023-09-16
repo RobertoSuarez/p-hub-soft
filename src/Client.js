@@ -4,6 +4,13 @@ class Client {
     this.distance = 0;
   }
 
+  toJSON() {
+    return {
+      hub: this.hub.toJSON(),
+      distance: this.distance,
+    };
+  }
+
   // Calculamos la distancia euclediana
   calculateDistance(server) {
     this.distance = Math.sqrt(

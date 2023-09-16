@@ -12,6 +12,17 @@ class Hub {
     this.demand = demand;
   }
 
+  toJSON() {
+    return {
+      nodeNumber: this.nodeNumber,
+      point: {
+        x: this.point.x,
+        y: this.point.y,
+      },
+      demand: this.demand,
+    };
+  }
+
   toServer(capacity) {
     // console.log("ahora soy un servidor");
     return new Server(this, capacity);

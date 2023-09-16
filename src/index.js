@@ -7,7 +7,10 @@ const Grafico = require("./grafico");
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
+const { performance } = require("perf_hooks");
 const stream = require("stream");
+const { db } = require("./db/dbconfig");
+const { Timestamp } = require("firebase-admin/firestore");
 
 const app = express();
 
@@ -30,12 +33,29 @@ app.post("/init-phub", upload.single("file"), (req, res) => {
     crlfDelay: Infinity,
   });
 
-  const iteraciones = parseInt(req.body.iteraciones);
-  console.log(iteraciones);
+  const iterations = parseInt(req.body.iterations);
 
   const pHub = new PorHub("src/data/phub_50_5_2.txt");
-  pHub.run(iteraciones, rl, (phubSolution) => {
-    res.send(phubSolution);
+
+  const inicio = performance.now();
+
+  pHub.run(iterations, rl, ({ solution, servers = [] }) => {
+    const fin = performance.now();
+    const timeElapsed = fin - inicio;
+
+    // registramos la solución en firebase
+    const saveResult = async () => {
+      const resfire = await db.collection("resultados").add({
+        solution,
+        servers: servers.map((server) => server.toJSON()),
+        iterations,
+        timeElapsed,
+        date: Timestamp.now(),
+      });
+      res.send({ id: resfire.id });
+    };
+
+    saveResult();
   });
 });
 

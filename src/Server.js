@@ -8,6 +8,17 @@ class Server {
     this.clients = [];
   }
 
+  toJSON() {
+    return {
+      hub: this.hub.toJSON(),
+      totalDistance: this.totalDistance,
+      totalClients: this.totalClients,
+      accumulatedCapacity: this.accumulatedCapacity,
+      capacity: this.capacity,
+      clients: this.clients.map((client) => client.toJSON()),
+    };
+  }
+
   // addClient agregara clientes al servidor
   // pero se validara si el servidor tiene la capacidad para
   // agregar al cliente.
