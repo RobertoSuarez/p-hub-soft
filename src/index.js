@@ -5,11 +5,35 @@ const _ = require("lodash");
 const { Hub } = require("./Hub");
 const Grafico = require("./grafico");
 const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
+const stream = require("stream");
+
 const app = express();
+
 const port = process.env.PORT || 3000;
+
+app.use(cors());
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 app.get("/", (req, res) => {
   res.send("Hola, mundo");
+});
+
+app.post("/init-phub", upload.single("file"), (req, res) => {
+  const bufferStream = new stream.PassThrough();
+  bufferStream.end(req.file.buffer);
+  const rl = readline.createInterface({
+    input: bufferStream,
+    crlfDelay: Infinity,
+  });
+
+  const pHub = new PorHub("src/data/phub_50_5_2.txt");
+  pHub.run(10, rl, (phubSolution) => {
+    res.send(phubSolution);
+  });
 });
 
 app.listen(port, () => {
@@ -26,11 +50,13 @@ class PorHub {
     this.serv = null;
   }
 
-  run(iterations) {
-    this.rl = readline.createInterface({
-      input: fs.createReadStream(this.filePath),
-      crlfDelay: Infinity,
-    });
+  run(iterations, readline, resultado) {
+    // this.rl = readline.createInterface({
+    //   input: fs.createReadStream(this.filePath),
+    //   crlfDelay: Infinity,
+    // });
+
+    this.rl = readline;
 
     this.rl.on("line", (line) => {
       const input = this.converStringToNumberArray(line.trim());
@@ -50,22 +76,24 @@ class PorHub {
     });
 
     this.rl.on("close", () => {
-      const { solution } = this.phub(
+      const phubSolution = this.phub(
         this.hubs,
         this.quantityServers,
         this.capacityServers,
         iterations
       );
 
-      console.log(`Cantidad de hubs: ${this.totalHubs}`);
-      console.log(`Cantidad de servidores: ${this.quantityServers}`);
-      console.log(`Capacidad total de servidores: ${this.capacityServers}`);
-      console.log(`La mejor solución es: ${solution}`);
+      resultado(phubSolution);
 
-      // Show plot
-      var plots = new Grafico.Plots();
-      //Enviamos los servidores y nuestra solucion
-      plots.showPlot(this.serv, solution);
+      // console.log(`Cantidad de hubs: ${this.totalHubs}`);
+      // console.log(`Cantidad de servidores: ${this.quantityServers}`);
+      // console.log(`Capacidad total de servidores: ${this.capacityServers}`);
+      // console.log(`La mejor solución es: ${solution}`);
+
+      // // Show plot
+      // var plots = new Grafico.Plots();
+      // //Enviamos los servidores y nuestra solucion
+      // plots.showPlot(this.serv, solution);
     });
   }
 
