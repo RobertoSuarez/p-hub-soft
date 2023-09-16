@@ -41,7 +41,7 @@ app.post("/init-phub", upload.single("file"), (req, res) => {
 
   pHub.run(iterations, rl, ({ solution, servers = [] }) => {
     const fin = performance.now();
-    const timeElapsed = fin - inicio;
+    const timeElapsed = (fin - inicio) / 1000;
 
     // registramos la solución en firebase
     const saveResult = async () => {
