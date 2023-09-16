@@ -30,8 +30,11 @@ app.post("/init-phub", upload.single("file"), (req, res) => {
     crlfDelay: Infinity,
   });
 
+  const iteraciones = parseInt(req.body.iteraciones);
+  console.log(iteraciones);
+
   const pHub = new PorHub("src/data/phub_50_5_2.txt");
-  pHub.run(10, rl, (phubSolution) => {
+  pHub.run(iteraciones, rl, (phubSolution) => {
     res.send(phubSolution);
   });
 });
