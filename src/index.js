@@ -4,17 +4,27 @@ const spinners = require("cli-spinners");
 const _ = require("lodash");
 const { Hub } = require("./Hub");
 const Grafico = require("./grafico");
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Hola, mundo");
+});
+
+app.listen(port, () => {
+  console.log(`App listening on port: ${port}`);
+});
 
 class PorHub {
   constructor(filePath) {
     this.filePath = filePath;
     this.hubs = [];
-    this.totalHubs = 0; 
+    this.totalHubs = 0;
     this.quantityServers = 0;
     this.capacityServers = 0;
     this.serv = null;
   }
- 
 
   run(iterations) {
     this.rl = readline.createInterface({
@@ -39,27 +49,25 @@ class PorHub {
       }
     });
 
-    this.rl.on("close", () => { 
- 
+    this.rl.on("close", () => {
       const { solution } = this.phub(
         this.hubs,
         this.quantityServers,
         this.capacityServers,
         iterations
-      );  
-  
-      console.log(`Cantidad de hubs: ${this.totalHubs}`); 
+      );
+
+      console.log(`Cantidad de hubs: ${this.totalHubs}`);
       console.log(`Cantidad de servidores: ${this.quantityServers}`);
-      console.log(`Capacidad total de servidores: ${ this.capacityServers}`); 
-      console.log(`La mejor solución es: ${solution}`); 
- 
+      console.log(`Capacidad total de servidores: ${this.capacityServers}`);
+      console.log(`La mejor solución es: ${solution}`);
+
       // Show plot
-    var plots = new Grafico.Plots(); 
-    //Enviamos los servidores y nuestra solucion
-    plots.showPlot(this.serv,solution); 
+      var plots = new Grafico.Plots();
+      //Enviamos los servidores y nuestra solucion
+      plots.showPlot(this.serv, solution);
     });
   }
- 
 
   phub(hubs, quantityServers, capacityServers, iterations) {
     console.log(`Iteraciones que se quiere hacer ${iterations}`);
@@ -70,17 +78,17 @@ class PorHub {
       capacityServers
     );
 
-    for (let index = 0; index < iterations - 1; index++) { 
-        const solution = this.pHubOneSolution(
-          _.cloneDeep(hubs),
-          quantityServers,
-          capacityServers
-        ); 
+    for (let index = 0; index < iterations - 1; index++) {
+      const solution = this.pHubOneSolution(
+        _.cloneDeep(hubs),
+        quantityServers,
+        capacityServers
+      );
 
       if (solution.solution < bestSolution.solution) {
         bestSolution = solution;
         this.serv = solution.servers;
-      }  
+      }
     }
 
     return bestSolution;
@@ -110,11 +118,10 @@ class PorHub {
     const solution = servers
       .map((server) => server.totalDistance)
       .reduce((prev, current) => prev + current, 0);
- 
 
     return {
       solution,
-      servers,  
+      servers,
     };
   }
 
@@ -164,5 +171,5 @@ class PorHub {
   }
 }
 
-const pHub = new PorHub("src/data/phub_50_5_2.txt");
-pHub.run(10); 
+// const pHub = new PorHub("src/data/phub_50_5_2.txt");
+// pHub.run(10);
