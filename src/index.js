@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
 app.post("/init-phub", upload.single("file"), (req, res) => {
   const bufferStream = new stream.PassThrough();
   bufferStream.end(req.file.buffer);
+  console.log(req.file);
   const rl = readline.createInterface({
     input: bufferStream,
     crlfDelay: Infinity,
@@ -51,6 +52,7 @@ app.post("/init-phub", upload.single("file"), (req, res) => {
         iterations,
         timeElapsed,
         date: Timestamp.now(),
+        file: req.file.originalname,
       });
       res.send({ id: resfire.id });
     };
